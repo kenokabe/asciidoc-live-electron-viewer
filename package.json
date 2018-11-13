@@ -1,0 +1,27 @@
+{
+  "name": "asciidoc-live-electron-viewer",
+  "version": "0.0.1",
+  "description": "asciidoc live electron viewer",
+  "main": "./main_.js",
+  "scripts": {
+    "test": "electron ./"
+  },
+  "keywords": [
+    "asciidoc",
+    "preview",
+    "live",
+    "viewer",
+    "electron"
+  ],
+  "author": "Ken Okabe",
+  "license": "MIT",
+  "dependencies": {
+    "electron": "^3.0.3",
+    "esm": "*",
+    "socket.io": "^2.1.1"
+  },
+  "devDependencies": {
+    "@types/socket.io": "^2.1.0",
+    "typescript": "*"
+  }
+}
