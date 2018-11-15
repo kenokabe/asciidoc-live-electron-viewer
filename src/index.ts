@@ -1,10 +1,10 @@
-/// <reference types="socket.io" />
-const io = require('socket.io')();
+/// <reference types="ws" />
 import { T, now } from "./modules/timeline-monad";
-import { Socket } from "socket.io";
 
 import { render } from "./render";
 import { save } from "./save";
+import { Socket } from "net";
+import { SocketType } from "dgram";
 
 interface timeline {
   type: string;
@@ -44,28 +44,41 @@ const baseOption = {
 const socketManager = () => {
   consoleTL[now] = ("index.ts!!!!!!");
 
-  io
-    .on('connection', (client: Socket) => {
-      consoleTL[now] = ('a user connected');
+  const WebSocket = require('ws');
 
-      client
-        .on('event', (data: data) => {
-          dataTL[now] = data;
-          render(dataTL)(baseOption);
-        });
+  const server = new WebSocket.Server({ port: 3999 });
 
-      client
-        .on('save', (f: Function) => {
-          save(dataTL)(baseOption)(f);
-        });
+  server
+    .on('connection',
+      (client: any) => {//type?
+        consoleTL[now] = ('a user connected');
 
-      client
-        .on('disconnect', () => {
-          consoleTL[now] = ('a user disconnected');
-        });
-    });
-  io.listen(3999);
+        client.send({});
+
+        interface msg {
+          cmd: string;
+          data: any;
+        }
+
+        client
+          .on('message', (msg: msg) =>
+            msg.cmd === "event"
+              ? ((data: data) => {
+                dataTL[now] = data;
+                render(dataTL)(baseOption);
+              })(msg.data)
+              : msg.cmd === "save"
+                ? ((f: Function) => {
+                  save(dataTL)(baseOption)(f);
+                })(msg.data)
+                : undefined
+          );
+
+        client
+          .on('close', () => {
+            consoleTL[now] = ('a user disconnected');
+          });
+      });
 };
-
 
 socketManager();
