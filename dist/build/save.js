@@ -1,13 +1,4 @@
 import { T, now } from "./modules/timeline-monad";
-const _target = document
-    .querySelector('#target');
-const target = _target == null
-    ? {}
-    : _target;
-const _sce = document.scrollingElement;
-const sce = _sce == null
-    ? {}
-    : _sce;
 const consoleTL = ((console) => T((self) => self.sync((a) => {
     console.log(a);
     return a;
@@ -15,20 +6,21 @@ const consoleTL = ((console) => T((self) => self.sync((a) => {
 const log = (a) => (consoleTL[now] = a);
 const asciidoctor = require('asciidoctor.js')();
 const path = require('path');
-const render = (dataTL) => (baseOption) => {
+const save = (dataTL) => (baseOption) => (f) => {
     const data = dataTL[now];
+    const name = data
+        .dir_name
+        .name.split(".")[0];
+    console.log(name);
     const addOption = {
-        base_dir: data.dir_name.dir
+        base_dir: data.dir_name.dir,
+        to_file: path.join(data.dir_name.dir, name + ".html")
     };
     const option = //destructive for {}
      Object.assign({}, baseOption, addOption);
     const html = asciidoctor
         .convert(data.text, option);
-    target.innerHTML = html;
-    consoleTL[now] = data.dir_name.dir;
-    consoleTL[now] = data.dir_name.name;
-    const p = data.line / data.lines;
-    sce.scrollTop = sce.scrollHeight * p;
+    f(name);
     return true;
 };
-export { render };
+export { save };

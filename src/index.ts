@@ -4,15 +4,20 @@ import { T, now } from "./modules/timeline-monad";
 import { Socket } from "socket.io";
 
 import { render } from "./render";
-
+import { save } from "./save";
 
 interface timeline {
   type: string;
-  [now: string]: unknown;
+  [now: string]: any;
   sync: Function;
+}
+interface dir_name {
+  dir: string;
+  name: string;
 }
 interface data {
   text: string;
+  dir_name: dir_name;
   line: number;
   lines: number;
 }
@@ -25,6 +30,16 @@ const consoleTL = ((console) => T(
 ))(console);
 const log = (a: undefined) => (consoleTL[now] = a);
 
+const dataTL = T();
+
+const baseOption = {
+  safe: 'unsafe',
+  header_footer: true,
+  attributes:
+  {
+    icons: 'font'
+  }
+};
 
 const socketManager = () => {
   consoleTL[now] = ("index.ts!!!!!!");
@@ -34,11 +49,15 @@ const socketManager = () => {
       consoleTL[now] = ('a user connected');
 
       client
-        .on('event', (data: data) =>
-          (render(data)));
+        .on('event', (data: data) => {
+          dataTL[now] = data;
+          render(dataTL)(baseOption);
+        });
 
       client
-        .on('save', (f: Function) => f());
+        .on('save', (f: Function) => {
+          save(dataTL)(baseOption)(f);
+        });
 
       client
         .on('disconnect', () => {
