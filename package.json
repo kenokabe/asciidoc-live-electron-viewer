@@ -16,12 +16,14 @@
   "author": "Ken Okabe",
   "license": "MIT",
   "dependencies": {
+    "asciidoctor.js": "^1.5.7",
     "electron": "^3.0.3",
     "esm": "*",
     "socket.io": "^2.1.1"
   },
   "devDependencies": {
     "@types/socket.io": "^2.1.0",
+    "@types/socket.io-client": "^1.4.32",
     "typescript": "*"
   }
 }
