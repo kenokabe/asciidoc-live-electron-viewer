@@ -39,20 +39,24 @@ interface data {
 }
 
 const asciidoctor = require('asciidoctor.js')();
-const path = require('path');
+const registry = asciidoctor.Extensions.create();
 
+require('../../asciidoc-extension-test/test.js')(registry);
+    
+ 
 const render = (dataTL: timeline) =>
   (baseOption: object) => {
 
-    const data = dataTL[now];
-
+    const data = dataTL[now]; 
     const addOption =
     {
-      base_dir: data.dir_name.dir
+      base_dir: data.dir_name.dir,
+      extension_registry: registry
     };
 
     const option =//destructive for {}
       Object.assign({}, baseOption, addOption);
+
 
     const html = asciidoctor
       .convert(data.text, option);

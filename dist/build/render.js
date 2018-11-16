@@ -14,11 +14,13 @@ const consoleTL = ((console) => T((self) => self.sync((a) => {
 })))(console);
 const log = (a) => (consoleTL[now] = a);
 const asciidoctor = require('asciidoctor.js')();
-const path = require('path');
+const registry = asciidoctor.Extensions.create();
+require('../../asciidoc-extension-test/test.js')(registry);
 const render = (dataTL) => (baseOption) => {
     const data = dataTL[now];
     const addOption = {
-        base_dir: data.dir_name.dir
+        base_dir: data.dir_name.dir,
+        extension_registry: registry
     };
     const option = //destructive for {}
      Object.assign({}, baseOption, addOption);
