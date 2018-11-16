@@ -1,10 +1,10 @@
-/// <reference types="ws" />
+
 import { T, now } from "./modules/timeline-monad";
 
 import { render } from "./render";
 import { save } from "./save";
 import { Socket } from "net";
-import { SocketType } from "dgram";
+
 
 interface timeline {
   type: string;
@@ -44,41 +44,59 @@ const baseOption = {
 const socketManager = () => {
   consoleTL[now] = ("index.ts!!!!!!");
 
-  const WebSocket = require('ws');
+  const net = require('net');
+  const JsonSocket = require("json-socket-international");
 
-  const server = new WebSocket.Server({ port: 3999 });
+  interface msg {
+    cmd: string;
+    data: any;
+  }
 
+  var port = 3999;
+  var server = net.createServer();
+  server
+    .listen(port);
   server
     .on('connection',
-      (client: any) => {//type?
-        consoleTL[now] = ('a user connected');
+      (socketTCP: Socket) => {
+        const socket = new JsonSocket(socketTCP);
+        consoleTL[now] = "VSCode client connected!";
 
-        client.send({});
+        const ping = () => {
+          socket.sendMessage({
+            cmd: "ping",
+            data: "Ping Succeeded! Viewer is ready."
+          });
+        };
 
-        interface msg {
-          cmd: string;
-          data: any;
-        }
+        const savedF = (name: string) => {
+          socket.sendMessage({
+            cmd: "saved",
+            data: name
+          });
+        };
 
-        client
-          .on('message', (msg: msg) =>
-            msg.cmd === "event"
-              ? ((data: data) => {
-                dataTL[now] = data;
-                render(dataTL)(baseOption);
-              })(msg.data)
-              : msg.cmd === "save"
-                ? ((f: Function) => {
-                  save(dataTL)(baseOption)(f);
-                })(msg.data)
-                : undefined
+        socket
+          .on('message',
+            (msg: msg) =>
+              (msg.cmd === "ping")
+                ? ping()
+                : (msg.cmd === "render")
+                  ? (dataTL[now] = msg.data) &&
+                  render(dataTL)(baseOption)
+                  : (msg.cmd === "save")
+                    ? save(dataTL)(baseOption)(savedF)
+                    : undefined
           );
 
-        client
-          .on('close', () => {
-            consoleTL[now] = ('a user disconnected');
-          });
+        socket
+          .on('close',
+            () => {
+              consoleTL[now] = "VSCode client disconnected...";
+            });
       });
-};
+
+
+}
 
 socketManager();

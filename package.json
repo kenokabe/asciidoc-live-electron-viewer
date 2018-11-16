@@ -16,11 +16,10 @@
   "author": "Ken Okabe",
   "license": "MIT",
   "dependencies": {
-    "@types/ws": "^6.0.1",
     "asciidoctor.js": "^1.5.7",
     "electron": "^3.0.3",
     "esm": "*",
-    "ws": "^6.1.0"
+    "json-socket-international": "^0.4.0"
   },
   "devDependencies": {
     "typescript": "*"

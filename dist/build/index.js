@@ -1,4 +1,3 @@
-/// <reference types="ws" />
 import { T, now } from "./modules/timeline-monad";
 import { render } from "./render";
 import { save } from "./save";
@@ -17,26 +16,40 @@ const baseOption = {
 };
 const socketManager = () => {
     consoleTL[now] = ("index.ts!!!!!!");
-    const WebSocket = require('ws');
-    const server = new WebSocket.Server({ port: 3999 });
+    const net = require('net');
+    const JsonSocket = require("json-socket-international");
+    var port = 3999;
+    var server = net.createServer();
     server
-        .on('connection', (client) => {
-        consoleTL[now] = ('a user connected');
-        client.send({});
-        client
-            .on('message', (msg) => msg.cmd === "event"
-            ? ((data) => {
-                dataTL[now] = data;
-                render(dataTL)(baseOption);
-            })(msg.data)
-            : msg.cmd === "save"
-                ? ((f) => {
-                    save(dataTL)(baseOption)(f);
-                })(msg.data)
-                : undefined);
-        client
+        .listen(port);
+    server
+        .on('connection', (socketTCP) => {
+        const socket = new JsonSocket(socketTCP);
+        consoleTL[now] = "VSCode client connected!";
+        const ping = () => {
+            socket.sendMessage({
+                cmd: "ping",
+                data: "Ping Succeeded! Viewer is ready."
+            });
+        };
+        const savedF = (name) => {
+            socket.sendMessage({
+                cmd: "saved",
+                data: name
+            });
+        };
+        socket
+            .on('message', (msg) => (msg.cmd === "ping")
+            ? ping()
+            : (msg.cmd === "render")
+                ? (dataTL[now] = msg.data) &&
+                    render(dataTL)(baseOption)
+                : (msg.cmd === "save")
+                    ? save(dataTL)(baseOption)(savedF)
+                    : undefined);
+        socket
             .on('close', () => {
-            consoleTL[now] = ('a user disconnected');
+            consoleTL[now] = "VSCode client disconnected...";
         });
     });
 };
