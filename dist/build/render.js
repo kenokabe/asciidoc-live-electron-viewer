@@ -16,7 +16,7 @@ const log = (a) => (consoleTL[now] = a);
 const linesMappingTL = T();
 const asciidoctor = require('asciidoctor.js')();
 const registry = asciidoctor.Extensions.create();
-//require('../../asciidoc-extension-test/test.js')(registry);
+//require('../../asciidoc-extension-test/index.js')(registry);
 import { test } from './ext';
 test(registry)(linesMappingTL);
 const render = ((linesMappingTL) => (dataTL) => (baseOption) => {
@@ -33,20 +33,19 @@ const render = ((linesMappingTL) => (dataTL) => (baseOption) => {
     target.innerHTML = html;
     consoleTL[now] = data.dir_name.dir;
     consoleTL[now] = data.dir_name.name;
-    const targetline = (line => linesMappingTL[now]
-        .reduce((acm, current) => (line >= current)
-        ? current
-        : acm))(data.line + 1);
-    const id = (targetline === 1)
-        ? "target" //target div
-        : "__asciidoc-view-" + targetline;
+    const targetID = (data.line < 10)
+        ? "target"
+        : (line => linesMappingTL[now]
+            .reduce((acm, current) => (line >= current.line)
+            ? current.id
+            : acm))(data.line + 1);
     const _targetElement = document
-        .getElementById(id);
+        .getElementById(targetID);
     const targetElement = _targetElement == null
         ? {}
         : _targetElement;
     targetElement.scrollIntoView();
-    const offset = 100;
+    const offset = 150;
     ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) //touch the bottom
         ? undefined
         : sce.scrollTop = sce.scrollTop - offset;
