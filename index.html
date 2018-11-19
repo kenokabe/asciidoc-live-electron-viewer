@@ -9,12 +9,9 @@
 
 <body>
 
-  <div id="target"></div>
+  <div id="target" class="target"></div>
 
   <script>
-    console.log(document.querySelector('#target'));
-
-    // You can also require other files to run in this process
     require = require('esm')(module)
     require('./dist/build/index.js')
   </script>

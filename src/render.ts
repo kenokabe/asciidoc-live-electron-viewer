@@ -12,7 +12,6 @@ const sce = _sce == null
   ? <Element>{}
   : _sce;
 
-
 const consoleTL = ((console) => T(
   (self: timeline) => self.sync((a: unknown) => {
     console.log(a);
@@ -38,40 +37,66 @@ interface data {
   lines: number;
 }
 
+const linesMappingTL = T();
+
 const asciidoctor = require('asciidoctor.js')();
 const registry = asciidoctor.Extensions.create();
 
-require('../../asciidoc-extension-test/test.js')(registry);
-    
- 
-const render = (dataTL: timeline) =>
-  (baseOption: object) => {
+//require('../../asciidoc-extension-test/test.js')(registry);
 
-    const data = dataTL[now]; 
-    const addOption =
-    {
-      base_dir: data.dir_name.dir,
-      extension_registry: registry
-    };
+import { test } from './ext';
+test(registry)(linesMappingTL);
 
-    const option =//destructive for {}
-      Object.assign({}, baseOption, addOption);
+const render = ((linesMappingTL: timeline) =>
+  (dataTL: timeline) =>
+    (baseOption: object) => {
 
+      const data = dataTL[now];
+      const addOption =
+      {
+        base_dir: data.dir_name.dir,
+        extension_registry: registry,
+        sourcemap: true
+      };
 
-    const html = asciidoctor
-      .convert(data.text, option);
+      const option =//destructive for {}
+        Object.assign({}, baseOption, addOption);
 
-    target.innerHTML = html;
-    consoleTL[now] = data.dir_name.dir;
-    consoleTL[now] = data.dir_name.name;
+      const html = asciidoctor
+        .convert(data.text, option);
 
-    const p = data.line / data.lines;
-    sce.scrollTop = sce.scrollHeight * p;
+      target.innerHTML = html;
+      consoleTL[now] = data.dir_name.dir;
+      consoleTL[now] = data.dir_name.name;
 
-    return true;
-  };
+      const targetline = (line =>
+        linesMappingTL[now]
+          .reduce((acm: number, current: number) =>
+            (line >= current)
+              ? current
+              : acm
+          ))(data.line + 1);
 
+      const id = (targetline === 1)
+        ? "target"//target div
+        : "__asciidoc-view-" + targetline;
 
+      const _targetElement = document
+        .getElementById(id);
+      const targetElement = _targetElement == null
+        ? <Element>{}
+        : _targetElement;
+
+      targetElement.scrollIntoView();
+
+      const offset = 100;
+
+      ((window.innerHeight + window.scrollY) >= document.body.offsetHeight)//touch the bottom
+        ? undefined
+        : sce.scrollTop = sce.scrollTop - offset;
+
+      return true;
+    })(linesMappingTL);
 
 export { render };
 
