@@ -33,14 +33,15 @@ const render = ((linesMappingTL) => (dataTL) => (baseOption) => {
     target.innerHTML = html;
     consoleTL[now] = data.dir_name.dir;
     consoleTL[now] = data.dir_name.name;
-    const targetID = (data.line < 10)
+    const line = (line => linesMappingTL[now]
+        .reduce((acm, current) => (line >= current)
+        ? current
+        : acm))(data.line + 1);
+    const className = (data.line < 10)
         ? "target"
-        : (line => linesMappingTL[now]
-            .reduce((acm, current) => (line >= current.line)
-            ? current.id
-            : acm))(data.line + 1);
+        : "data-asciidocline" + line;
     const _targetElement = document
-        .getElementById(targetID);
+        .getElementsByClassName(className)[0];
     const targetElement = _targetElement == null
         ? {}
         : _targetElement;

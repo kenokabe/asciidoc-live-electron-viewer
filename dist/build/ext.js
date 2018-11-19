@@ -12,11 +12,8 @@ const test = (registry) => (linesMappingTL) => {
             const linesMapping = blocks
                 .map((block) => {
                 const line = block.getLineNumber();
-                const id = (typeof block.id === "string")
-                    ? block.id
-                    : "_data-line_" + line;
-                block.id = id;
-                return { line, id };
+                block.addRole("data-asciidocline" + line);
+                return line;
             });
             //   console.log(linesMapping);
             linesMappingTL[now] = linesMapping;

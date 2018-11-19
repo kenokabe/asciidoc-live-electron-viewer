@@ -69,23 +69,20 @@ const render = ((linesMappingTL: timeline) =>
       consoleTL[now] = data.dir_name.dir;
       consoleTL[now] = data.dir_name.name;
 
+      const line = (line =>
+        linesMappingTL[now]
+          .reduce((acm: number, current: number) =>
+            (line >= current)
+              ? current
+              : acm
+          ))(data.line + 1);
 
-      interface current {
-        line: number;
-        id: string;
-      }
-      const targetID = (data.line < 10)
+      const className = (data.line < 10)
         ? "target"
-        : (line =>
-          linesMappingTL[now]
-            .reduce((acm: string, current: current) =>
-              (line >= current.line)
-                ? current.id
-                : acm
-            ))(data.line + 1);
+        : "data-asciidocline" + line;
 
       const _targetElement = document
-        .getElementById(targetID);
+        .getElementsByClassName(className)[0];
       const targetElement = _targetElement == null
         ? <Element>{}
         : _targetElement;
