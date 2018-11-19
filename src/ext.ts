@@ -25,13 +25,12 @@ const test = (registry: {
       const self = this;
       self.process((doc: block) => {
 
-        const blocks: block[] = doc.findBy();
-        //   console.log("doc");
-        //    console.log(doc.base_dir);
-        const blocks1 = blocks
-          .filter((block: block) => block.source_location.dir === doc.base_dir)
-        //      console.log(blocks1);
-        const linesMapping = blocks1
+        const blocks: block[] =
+          doc
+            .findBy()
+            .filter((block: block) => block.source_location.dir === doc.base_dir)
+
+        const linesMapping = blocks
           .map((block) => {
             const line = block.getLineNumber();
             block.id = "__asciidoc-view-" + line;
