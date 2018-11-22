@@ -36,7 +36,6 @@ const render = (dataTL) => (baseOption) => (f) => {
             .getElementsByTagName("script")[0];
         const bodyTargetEl = document
             .getElementsByTagName("body")[0];
-        console.log(selfEl);
         const data = dataTL[now];
         const addOption = {
             base_dir: data.dir_name.dir,
@@ -51,7 +50,7 @@ const render = (dataTL) => (baseOption) => (f) => {
         const parser = new DOMParser();
         const htmlEl = parser
             .parseFromString(html, "text/html");
-        consoleTL[now] = htmlEl;
+        // consoleTL[now] = htmlEl;
         //copy body attribute
         /*
                 for (let name in htmlEl
@@ -65,8 +64,12 @@ const render = (dataTL) => (baseOption) => (f) => {
         //---------get head
         const headEl = htmlEl
             .getElementsByTagName("head")[0];
-        consoleTL[now] = headEl;
-        console.log(headEl.isEqualNode(headElTL[now]));
+        // consoleTL[now] = headEl;
+        /*
+                console.log(
+                  headEl.isEqualNode(headElTL[now] as HTMLBaseElement)
+                );
+        */
         headEl.isEqualNode(headElTL[now])
             ? undefined
             : (() => {
@@ -82,27 +85,32 @@ const render = (dataTL) => (baseOption) => (f) => {
         //---------get body
         const bodyEl = htmlEl
             .getElementsByTagName("body")[0];
-        consoleTL[now] = "bodyEl";
-        consoleTL[now] = bodyEl;
-        console.log("//copy body attribute");
-        console.log(bodyEl.classList);
+        //consoleTL[now] = "bodyEl";
+        // consoleTL[now] = bodyEl;
+        //copy body attribute
         Array.from(bodyEl.classList)
             .map((name) => bodyTargetEl.classList.add(name));
         const bodyChildlenEls = Array.prototype
             .slice.call(bodyEl.children);
-        consoleTL[now] = bodyChildlenEls;
+        //consoleTL[now] = bodyChildlenEls;
         const bodyContentsEls = bodyChildlenEls
             .filter((el) => (el.tagName !== "SCRIPT"));
-        consoleTL[now] = "bodyContentsEls";
-        consoleTL[now] = bodyContentsEls;
+        //consoleTL[now] = "bodyContentsEls";
+        //consoleTL[now] = bodyContentsEls;
         bodyTargetEl.innerHTML = "";
         bodyContentsEls.map((el) => bodyTargetEl
             .insertAdjacentElement("beforeend", el));
         //script hack -----
-        const codeEls = Array.prototype
-            .slice.call(document
-            .getElementsByClassName("highlight"));
-        codeEls.map((el) => hljs.initHighlighting(el));
+        /*
+                const codeEls = Array.prototype
+                  .slice.call(document
+                    .getElementsByClassName("highlight"));
+        
+                codeEls.map((el: HTMLBodyElement) =>
+                  hljs.initHighlighting(el)
+                );
+        
+        */
         //target scroll---------
         consoleTL[now] = data.dir_name.dir;
         consoleTL[now] = data.dir_name.name;
@@ -118,18 +126,19 @@ const render = (dataTL) => (baseOption) => (f) => {
         const targetElement = _targetElement == null
             ? {}
             : _targetElement;
-        f(); //render done!
         //error??
         targetElement.scrollIntoView();
         const offset = 150;
         ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) //touch the bottom
             ? undefined
             : sce.scrollTop = sce.scrollTop - offset;
+        f(); //render done!
         return true;
     }
     catch (error) {
         console.log("!!! ERROR !!!");
         console.log(error);
+        f(); //render done!
     }
 };
 export { render };

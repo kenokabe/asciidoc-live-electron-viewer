@@ -49,7 +49,6 @@ const socketManager = () => {
             ? ping()
             : (msg.cmd === "render")
                 ? (dataTL[now] = msg.data) &&
-                    // save(dataTL)(baseOption)(savedF)
                     render(dataTL)(baseOption)(renderDoneF)
                 : (msg.cmd === "save")
                     ? save(dataTL)(baseOption)(savedF)

@@ -75,8 +75,6 @@ const render = (dataTL: timeline) =>
           .getElementsByTagName("body")[0];
 
 
-        console.log(selfEl);
-
         const data = dataTL[now];
         const addOption =
         {
@@ -97,8 +95,7 @@ const render = (dataTL: timeline) =>
         const htmlEl = parser
           .parseFromString(html, "text/html");
 
-        consoleTL[now] = htmlEl;
-
+        // consoleTL[now] = htmlEl;
 
         //copy body attribute
         /*
@@ -113,12 +110,12 @@ const render = (dataTL: timeline) =>
         //---------get head
         const headEl = htmlEl
           .getElementsByTagName("head")[0];
-        consoleTL[now] = headEl;
-
-        console.log(
-          headEl.isEqualNode(headElTL[now] as HTMLBaseElement)
-        );
-
+        // consoleTL[now] = headEl;
+        /*
+                console.log(
+                  headEl.isEqualNode(headElTL[now] as HTMLBaseElement)
+                );
+        */
 
         headEl.isEqualNode(headElTL[now] as HTMLBaseElement)
           ? undefined
@@ -140,14 +137,11 @@ const render = (dataTL: timeline) =>
         //---------get body
         const bodyEl = htmlEl
           .getElementsByTagName("body")[0];
-        consoleTL[now] = "bodyEl";
-        consoleTL[now] = bodyEl;
+        //consoleTL[now] = "bodyEl";
+        // consoleTL[now] = bodyEl;
 
-        console.log(
+        //copy body attribute
 
-          "//copy body attribute");
-
-        console.log(bodyEl.classList);
 
         Array.from(bodyEl.classList)
           .map((name: string) =>
@@ -157,15 +151,15 @@ const render = (dataTL: timeline) =>
         const bodyChildlenEls: [] = Array.prototype
           .slice.call(bodyEl.children);
 
-        consoleTL[now] = bodyChildlenEls;
+        //consoleTL[now] = bodyChildlenEls;
 
         const bodyContentsEls = bodyChildlenEls
           .filter((el: HTMLBodyElement) =>
             (el.tagName !== "SCRIPT")
           );
 
-        consoleTL[now] = "bodyContentsEls";
-        consoleTL[now] = bodyContentsEls;
+        //consoleTL[now] = "bodyContentsEls";
+        //consoleTL[now] = bodyContentsEls;
         bodyTargetEl.innerHTML = "";
         bodyContentsEls.map((el: HTMLBodyElement) =>
           bodyTargetEl
@@ -175,16 +169,16 @@ const render = (dataTL: timeline) =>
 
 
         //script hack -----
-
-        const codeEls = Array.prototype
-          .slice.call(document
-            .getElementsByClassName("highlight"));
-
-        codeEls.map((el: HTMLBodyElement) =>
-          hljs.initHighlighting(el)
-        );
-
-
+        /*
+                const codeEls = Array.prototype
+                  .slice.call(document
+                    .getElementsByClassName("highlight"));
+        
+                codeEls.map((el: HTMLBodyElement) =>
+                  hljs.initHighlighting(el)
+                );
+        
+        */
 
         //target scroll---------
 
@@ -210,10 +204,6 @@ const render = (dataTL: timeline) =>
           ? <Element>{}
           : _targetElement;
 
-
-
-        f();//render done!
-
         //error??
         targetElement.scrollIntoView();
 
@@ -225,11 +215,15 @@ const render = (dataTL: timeline) =>
 
 
 
+        f();//render done!
+
         return true;
 
       } catch (error) {
         console.log("!!! ERROR !!!");
         console.log(error);
+
+        f();//render done!
       }
 
 
