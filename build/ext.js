@@ -1,5 +1,5 @@
 import { T, now } from "./modules/timeline-monad";
-const test = (registry) => (linesMappingTL) => {
+const linemap = (registry) => (linesMappingTL) => {
     registry.treeProcessor(function () {
         const self = this;
         self.process((doc) => {
@@ -21,4 +21,4 @@ const test = (registry) => (linesMappingTL) => {
         });
     });
 };
-export { test };
+export { linemap };

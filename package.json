@@ -16,7 +16,6 @@
   "author": "Ken Okabe",
   "license": "MIT",
   "dependencies": {
-    "asciidoctor-extension-interactive-runner": "^1.2.1",
     "asciidoctor.js": "^1.5.7",
     "electron": "^3.0.3",
     "esm": "*",

@@ -2,19 +2,16 @@
 <html>
 
 <head>
-  <meta charset="UTF-8">
-  <title>asciidoc-live-electron-viewer</title>
+  <script>
+    require = require('esm')(module);
+    require('./build/index.js');
+  </script>
 
 </head>
 
-<body>
+<body class="target">
 
-  <div id="target" class="target"></div>
 
-  <script>
-    require = require('esm')(module)
-    require('./dist/build/index.js')
-  </script>
 </body>
 
 </html>

@@ -1,6 +1,11 @@
 
 import { T, now } from "./modules/timeline-monad";
 
+const _target = document
+  .querySelector('#target');
+const target = _target == null
+  ? <Element>{}
+  : _target;
 
 const _sce = document.scrollingElement;
 const sce = _sce == null
@@ -29,6 +34,7 @@ interface data {
   text: string;
   dir_name: dir_name;
   line: number;
+  lines: number;
 }
 
 const linesMappingTL = T();
@@ -47,36 +53,22 @@ import('../extensions/highlight.js/index.js')
   });
 */
 
-
-
-
-
 const headElTL = T();
 headElTL[now] =
   document
     .getElementsByTagName("head")[0];
 
 let count = 0;
+const render = ((linesMappingTL: timeline) =>
+  (dataTL: timeline) =>
+    (baseOption: object) =>
+      (f: Function) => {
 
-const render = (dataTL: timeline) =>
-  (baseOption: object) =>
-    (f: Function) => {
-
-      try {
         console.log(count++);
 
+        //renderDone
+        //f();
 
-        const headTargetEl = document
-          .getElementsByTagName("head")[0];
-
-        const selfEl = document
-          .getElementsByTagName("script")[0];
-
-        const bodyTargetEl = document
-          .getElementsByTagName("body")[0];
-
-
-        console.log(selfEl);
 
         const data = dataTL[now];
         const addOption =
@@ -92,7 +84,6 @@ const render = (dataTL: timeline) =>
         const html = asciidoctor
           .convert(data.text, option);
 
-
         //---------get html
         const parser = new DOMParser()
         const htmlEl = parser
@@ -103,67 +94,58 @@ const render = (dataTL: timeline) =>
         //---------get head
         const headEl = htmlEl
           .getElementsByTagName("head")[0];
+        const headTargetEl = document
+          .getElementsByTagName("head")[0];
         consoleTL[now] = headEl;
+
 
         console.log(
           headEl.isEqualNode(headElTL[now] as HTMLBaseElement)
         );
 
-
-        headEl.isEqualNode(headElTL[now] as HTMLBaseElement)
-          ? undefined
-          : (() => {
-
-            const headChildlenEls = Array.prototype
-              .slice.call(headEl.children);
-            headTargetEl.innerHTML = "";
-            headChildlenEls.map((el: HTMLBodyElement) =>
-              headTargetEl
-                .insertAdjacentElement("beforeend", el)
-            );
-            headTargetEl
-              .insertAdjacentElement("beforeend", selfEl);
-          })()
-
         headElTL[now] = headEl;
 
-        //---------get body
-        const bodyEl = htmlEl
-          .getElementsByTagName("body")[0];
-        consoleTL[now] = "bodyEl";
-        consoleTL[now] = bodyEl;
-
-
-
-        const bodyChildlenEls = Array.prototype
-          .slice.call(bodyEl.children);
-
-        consoleTL[now] = bodyChildlenEls;
-
-        const bodyContentsEls = bodyChildlenEls
-          .filter((el: HTMLBodyElement) =>
-            (el.tagName !== "12345SCRIPT")
-          );
-
-        consoleTL[now] = "bodyContentsEls";
-        consoleTL[now] = bodyContentsEls;
-        bodyTargetEl.innerHTML = "";
-        bodyContentsEls.map((el: HTMLBodyElement) =>
-          bodyTargetEl
-            .insertAdjacentElement("beforeend", el)
-        );
-
-        //script hack -----
-
-
-        //target scroll---------
+        const headChildlenEls = Array.prototype
+          .slice.call(headEl.children);
+        /* 
+             headChildlenEls.map((el: HTMLBodyElement) =>
+               headTargetEl
+                 .insertAdjacentElement("beforeend", el)
+             );
+            
+                //---------get body
+                const bodyEl = htmlEl
+                  .getElementsByTagName("body")[0];
+                const bodyTargetEl = document
+                  .getElementsByTagName("body")[0];
+                consoleTL[now] = "bodyEl";
+                consoleTL[now] = bodyEl;
+          
+                const bodyChildlenEls = Array.prototype
+                  .slice.call(bodyEl.children);
+          
+                consoleTL[now] = bodyChildlenEls;
+          
+                const bodyContentsEls = bodyChildlenEls
+                  .filter((el: HTMLBodyElement) =>
+                    (el.tagName !== "SCRIPT")
+                  );
+          
+                consoleTL[now] = "bodyContentsEls";
+                consoleTL[now] = bodyContentsEls;
+          
+                bodyContentsEls.map((el: HTMLBodyElement) =>
+                  bodyTargetEl
+                    .insertAdjacentElement("beforeend", el)
+                );
+          
+          */
 
         consoleTL[now] = data.dir_name.dir;
         consoleTL[now] = data.dir_name.name;
 
-
-        const line = ((line: number) =>
-          (linesMappingTL[now] as number[])
+        const line = (line =>
+          linesMappingTL[now]
             .reduce((acm: number, current: number) =>
               (line >= current)
                 ? current
@@ -180,11 +162,6 @@ const render = (dataTL: timeline) =>
           ? <Element>{}
           : _targetElement;
 
-
-
-        f();//render done!
-
-        //error??
         targetElement.scrollIntoView();
 
         const offset = 150;
@@ -194,17 +171,8 @@ const render = (dataTL: timeline) =>
           : sce.scrollTop = sce.scrollTop - offset;
 
 
-
         return true;
-
-      } catch (error) {
-        console.log("!!! ERROR !!!");
-        console.log(error);
-      }
-
-
-    };
-
-
+      })(linesMappingTL);
 
 export { render };
+

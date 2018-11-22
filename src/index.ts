@@ -68,7 +68,12 @@ const socketManager = () => {
             data: "Ping Succeeded! Viewer is ready."
           });
         };
-
+        const renderDoneF = () => {
+          socket.sendMessage({
+            cmd: "renderDone",
+            data: {}
+          });
+        };
         const savedF = (name: string) => {
           socket.sendMessage({
             cmd: "saved",
@@ -83,7 +88,8 @@ const socketManager = () => {
                 ? ping()
                 : (msg.cmd === "render")
                   ? (dataTL[now] = msg.data) &&
-                  render(dataTL)(baseOption)
+                  // save(dataTL)(baseOption)(savedF)
+                  render(dataTL)(baseOption)(renderDoneF)
                   : (msg.cmd === "save")
                     ? save(dataTL)(baseOption)(savedF)
                     : undefined

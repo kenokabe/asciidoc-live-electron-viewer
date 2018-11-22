@@ -19,7 +19,7 @@ interface block {
   };
 }
 
-const test = (registry: {
+const linemap = (registry: {
   treeProcessor: Function
 }) =>
   (linesMappingTL: timeline) => {
@@ -50,4 +50,4 @@ const test = (registry: {
     });
   };
 
-export { test }
+export { linemap }
