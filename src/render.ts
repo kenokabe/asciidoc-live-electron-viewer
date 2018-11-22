@@ -1,6 +1,8 @@
 
+
 import { T, now } from "./modules/timeline-monad";
 
+const hljs = require('highlight.js');
 
 const _sce = document.scrollingElement;
 const sce = _sce == null
@@ -142,7 +144,7 @@ const render = (dataTL: timeline) =>
 
         const bodyContentsEls = bodyChildlenEls
           .filter((el: HTMLBodyElement) =>
-            (el.tagName !== "12345SCRIPT")
+            (el.tagName !== "SCRIPT")
           );
 
         consoleTL[now] = "bodyContentsEls";
@@ -154,6 +156,15 @@ const render = (dataTL: timeline) =>
         );
 
         //script hack -----
+
+        const codeEls = Array.prototype
+          .slice.call(document
+            .getElementsByClassName("highlight"));
+
+        codeEls.map((el: HTMLBodyElement) =>
+          hljs.initHighlighting(el)
+        );
+
 
 
         //target scroll---------
