@@ -50,9 +50,6 @@ import('../extensions/highlight.js/index.js')
 */
 
 
-
-
-
 const headElTL = T();
 headElTL[now] =
   document
@@ -102,6 +99,17 @@ const render = (dataTL: timeline) =>
 
         consoleTL[now] = htmlEl;
 
+
+        //copy body attribute
+        /*
+                for (let name in htmlEl
+                  .parentElement
+                  .attributes) {
+                  bodyTargetEl
+                    .setAttribute(name,
+                      bodyEl.attributes[name].value);
+                };
+        */
         //---------get head
         const headEl = htmlEl
           .getElementsByTagName("head")[0];
@@ -135,9 +143,18 @@ const render = (dataTL: timeline) =>
         consoleTL[now] = "bodyEl";
         consoleTL[now] = bodyEl;
 
+        console.log(
+
+          "//copy body attribute");
+
+        console.log(bodyEl.classList);
+
+        Array.from(bodyEl.classList)
+          .map((name: string) =>
+            bodyTargetEl.classList.add(name));
 
 
-        const bodyChildlenEls = Array.prototype
+        const bodyChildlenEls: [] = Array.prototype
           .slice.call(bodyEl.children);
 
         consoleTL[now] = bodyChildlenEls;
@@ -154,6 +171,8 @@ const render = (dataTL: timeline) =>
           bodyTargetEl
             .insertAdjacentElement("beforeend", el)
         );
+
+
 
         //script hack -----
 

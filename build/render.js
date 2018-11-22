@@ -52,6 +52,16 @@ const render = (dataTL) => (baseOption) => (f) => {
         const htmlEl = parser
             .parseFromString(html, "text/html");
         consoleTL[now] = htmlEl;
+        //copy body attribute
+        /*
+                for (let name in htmlEl
+                  .parentElement
+                  .attributes) {
+                  bodyTargetEl
+                    .setAttribute(name,
+                      bodyEl.attributes[name].value);
+                };
+        */
         //---------get head
         const headEl = htmlEl
             .getElementsByTagName("head")[0];
@@ -74,6 +84,10 @@ const render = (dataTL) => (baseOption) => (f) => {
             .getElementsByTagName("body")[0];
         consoleTL[now] = "bodyEl";
         consoleTL[now] = bodyEl;
+        console.log("//copy body attribute");
+        console.log(bodyEl.classList);
+        Array.from(bodyEl.classList)
+            .map((name) => bodyTargetEl.classList.add(name));
         const bodyChildlenEls = Array.prototype
             .slice.call(bodyEl.children);
         consoleTL[now] = bodyChildlenEls;
