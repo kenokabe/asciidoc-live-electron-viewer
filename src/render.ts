@@ -35,7 +35,6 @@ const asciidoctor = require('asciidoctor.js')();
 const registry = asciidoctor.Extensions.create();
 
 import { linemap } from './ext';
-import { isUndefined } from "util";
 linemap(registry)(linesMappingTL);
 /*
 import('../extensions/highlight.js/index.js')
