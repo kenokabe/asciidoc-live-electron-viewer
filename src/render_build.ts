@@ -19,10 +19,16 @@ const parser = new DOMParser();
 const build = (html: string) =>
   (headElTL: timeline) => {
 
-    const headTargetEl = document
-      .getElementsByTagName("head")[0];
     const selfEl = document
       .getElementsByTagName("script")[0];
+
+    const stemEl = document
+      .getElementsByTagName("link")[0];
+
+
+    const headTargetEl = document
+      .getElementsByTagName("head")[0];
+
     const bodyTargetEl = document
       .getElementsByTagName("body")[0];
 
@@ -56,6 +62,9 @@ const build = (html: string) =>
         );
         headTargetEl
           .insertAdjacentElement("beforeend", selfEl);
+        headTargetEl
+          .insertAdjacentElement("beforeend", stemEl);
+
       })()
 
     headElTL[now] = headEl;

@@ -66,19 +66,37 @@ const render = (dataTL) => (baseOption) => (f) => {
                 })();
         });
         stemEls.map((el) => {
-            const stem = el.innerHTML;
+            const stem = el.innerText;
             (stemCash[stem] !== undefined)
                 ? (() => {
                     el.innerHTML = stemCash[stem];
                     console.log("stem cash used");
                 })()
                 : (() => {
-                    stemCash[stem] = katex
-                        .renderToString(stem, {
-                        throwOnError: false
+                    var mjAPI = require("mathjax-node");
+                    mjAPI.config({
+                        MathJax: {
+                            tex2jax: {
+                                inlineMath: [['$', '$'],
+                                    ["\\(", "\\)"]]
+                            }
+                        }
                     });
-                    el.innerHTML = stemCash[stem];
-                    console.log("katex new");
+                    mjAPI.start();
+                    mjAPI.typeset({
+                        math: stem,
+                        format: "TeX",
+                        html: true,
+                    }, function (data) {
+                        (data.errors)
+                            ? consoleTL[now] = data.errors
+                            : (() => {
+                                console.log(data.mml);
+                                stemCash[stem] = data.html;
+                                el.innerHTML = stemCash[stem];
+                                console.log("katex new");
+                            })();
+                    });
                 })();
         });
         scroll(data)(linesMappingTL);

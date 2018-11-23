@@ -21,7 +21,8 @@
     "esm": "*",
     "highlight.js": "^9.13.1",
     "json-socket-international": "^0.4.0",
-    "katex": "^0.10.0"
+    "katex": "^0.10.0",
+    "mathjax-node": "^2.1.1"
   },
   "devDependencies": {
     "typescript": "*",

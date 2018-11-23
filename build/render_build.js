@@ -6,10 +6,12 @@ const consoleTL = ((console) => T((self) => self.sync((a) => {
 const log = (a) => (consoleTL[now] = a);
 const parser = new DOMParser();
 const build = (html) => (headElTL) => {
-    const headTargetEl = document
-        .getElementsByTagName("head")[0];
     const selfEl = document
         .getElementsByTagName("script")[0];
+    const stemEl = document
+        .getElementsByTagName("link")[0];
+    const headTargetEl = document
+        .getElementsByTagName("head")[0];
     const bodyTargetEl = document
         .getElementsByTagName("body")[0];
     //---------get html
@@ -35,6 +37,8 @@ const build = (html) => (headElTL) => {
                 .insertAdjacentElement("beforeend", el));
             headTargetEl
                 .insertAdjacentElement("beforeend", selfEl);
+            headTargetEl
+                .insertAdjacentElement("beforeend", stemEl);
         })();
     headElTL[now] = headEl;
     //---------get body
