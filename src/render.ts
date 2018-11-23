@@ -134,42 +134,13 @@ const render = (dataTL: timeline) =>
               console.log("stem cash used");
             })()
             : (() => {
-
-
-              var mjAPI = require("mathjax-node");
-              mjAPI.config({
-                MathJax: {
-                  tex2jax: {
-                    inlineMath: [['$', '$'],
-                    ["\\(", "\\)"]]
-                  }
-                }
-              });
-              mjAPI.start();
-
-
-              mjAPI.typeset({
-                math: stem,
-                format: "TeX", // or "inline-TeX", "MathML"
-                html: true,      // or svg:true, or html:true
-              }, function (data: any) {
-                (data.errors)
-                  ? consoleTL[now] = data.errors
-                  : (() => {
-                    console.log(data.mml);
-
-                    stemCash[stem] = data.html;
-
-                    el.innerHTML = stemCash[stem];
-
-                    console.log("katex new");
-                  })()
+              stemCash[stem] = katex.renderToString(stem, {
+                throwOnError: false
               });
 
+              el.innerHTML = stemCash[stem];
 
-
-
-
+              console.log("katex new");
             })();
 
         });

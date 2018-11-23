@@ -73,30 +73,11 @@ const render = (dataTL) => (baseOption) => (f) => {
                     console.log("stem cash used");
                 })()
                 : (() => {
-                    var mjAPI = require("mathjax-node");
-                    mjAPI.config({
-                        MathJax: {
-                            tex2jax: {
-                                inlineMath: [['$', '$'],
-                                    ["\\(", "\\)"]]
-                            }
-                        }
+                    stemCash[stem] = katex.renderToString(stem, {
+                        throwOnError: false
                     });
-                    mjAPI.start();
-                    mjAPI.typeset({
-                        math: stem,
-                        format: "TeX",
-                        html: true,
-                    }, function (data) {
-                        (data.errors)
-                            ? consoleTL[now] = data.errors
-                            : (() => {
-                                console.log(data.mml);
-                                stemCash[stem] = data.html;
-                                el.innerHTML = stemCash[stem];
-                                console.log("katex new");
-                            })();
-                    });
+                    el.innerHTML = stemCash[stem];
+                    console.log("katex new");
                 })();
         });
         scroll(data)(linesMappingTL);
