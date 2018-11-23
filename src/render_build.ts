@@ -80,14 +80,13 @@ const build = (html: string) =>
     //consoleTL[now] = bodyChildlenEls;
 
     const bodyContentsEls = bodyChildlenEls
-      .filter((el: HTMLBodyElement) =>
-        (el.tagName !== "SCRIPT")
-      );
+      .filter((el: HTMLBaseElement) =>
+        (el.tagName !== "SCRIPT"));
 
     //consoleTL[now] = "bodyContentsEls";
     //consoleTL[now] = bodyContentsEls;
     bodyTargetEl.innerHTML = "";
-    bodyContentsEls.map((el: HTMLBodyElement) =>
+    bodyContentsEls.map((el: any) =>
       bodyTargetEl
         .insertAdjacentElement("beforeend", el)
     );

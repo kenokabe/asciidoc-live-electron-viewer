@@ -20,7 +20,8 @@
     "electron": "^3.0.3",
     "esm": "*",
     "highlight.js": "^9.13.1",
-    "json-socket-international": "^0.4.0"
+    "json-socket-international": "^0.4.0",
+    "katex": "^0.10.0"
   },
   "devDependencies": {
     "typescript": "*",

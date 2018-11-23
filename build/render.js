@@ -3,6 +3,7 @@ import { fixLinks } from "./render_fixlinks";
 import { build } from "./render_build";
 import { scroll } from "./render_scroll";
 const hljs = require('highlight.js');
+const katex = require("katex");
 const consoleTL = ((console) => T((self) => self.sync((a) => {
     console.log(a);
     return a;
@@ -26,6 +27,8 @@ headElTL[now] =
     document
         .getElementsByTagName("head")[0];
 let count = 0;
+const hiCash = {};
+const stemCash = {};
 const render = (dataTL) => (baseOption) => (f) => {
     try {
         console.log(count++);
@@ -42,16 +45,42 @@ const render = (dataTL) => (baseOption) => (f) => {
         const htmlFixed = fixLinks(data)(html);
         build(htmlFixed)(headElTL);
         //script hack -----
-        /*
-                const codeEls = Array.prototype
-                  .slice.call(document
-                    .getElementsByClassName("highlight"));
-         
-                codeEls.map((el: HTMLBodyElement) =>
-                  hljs.initHighlighting(el)
-                );
-         
-        */
+        const codeEls = Array.prototype
+            .slice.call(document
+            .getElementsByClassName("highlight"));
+        const stemEls = Array.prototype
+            .slice.call(document
+            .getElementsByClassName("stemblock"));
+        codeEls.map((el) => {
+            const code = el.innerHTML;
+            (hiCash[code] !== undefined)
+                ? (() => {
+                    el.innerHTML = hiCash[code];
+                    console.log("cash used");
+                })()
+                : (() => {
+                    hljs.initHighlighting.called = false;
+                    hljs.initHighlighting(el);
+                    hiCash[code] = el.innerHTML;
+                    console.log("new");
+                })();
+        });
+        stemEls.map((el) => {
+            const stem = el.innerHTML;
+            (stemCash[stem] !== undefined)
+                ? (() => {
+                    el.innerHTML = stemCash[stem];
+                    console.log("stem cash used");
+                })()
+                : (() => {
+                    stemCash[stem] = katex
+                        .renderToString(stem, {
+                        throwOnError: false
+                    });
+                    el.innerHTML = stemCash[stem];
+                    console.log("katex new");
+                })();
+        });
         scroll(data)(linesMappingTL);
         f(); //render done!
         return true;

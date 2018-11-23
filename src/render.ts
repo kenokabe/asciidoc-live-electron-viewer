@@ -6,6 +6,8 @@ import { scroll } from "./render_scroll";
 
 const hljs = require('highlight.js');
 
+const katex = require("katex");
+
 const consoleTL = ((console) => T(
   (self: timeline) => self.sync((a: unknown) => {
     console.log(a);
@@ -36,6 +38,7 @@ const asciidoctor = require('asciidoctor.js')();
 const registry = asciidoctor.Extensions.create();
 
 import { linemap } from './ext';
+import { isUndefined } from "util";
 linemap(registry)(linesMappingTL);
 /*
 import('../extensions/highlight.js/index.js')
@@ -54,6 +57,16 @@ headElTL[now] =
 
 
 let count = 0;
+
+interface hiCash {
+  [index: string]: string;
+}
+const hiCash = {} as hiCash;
+
+interface stemCash {
+  [index: string]: string;
+}
+const stemCash = {} as stemCash;
 
 const render = (dataTL: timeline) =>
   (baseOption: object) =>
@@ -81,16 +94,59 @@ const render = (dataTL: timeline) =>
         build(htmlFixed)(headElTL);
 
         //script hack -----
-        /*
-                const codeEls = Array.prototype
-                  .slice.call(document
-                    .getElementsByClassName("highlight"));
-         
-                codeEls.map((el: HTMLBodyElement) =>
-                  hljs.initHighlighting(el)
-                );
-         
-        */
+
+        const codeEls = Array.prototype
+          .slice.call(document
+            .getElementsByClassName("highlight"));
+
+        const stemEls = Array.prototype
+          .slice.call(document
+            .getElementsByClassName("stemblock"));
+
+
+        codeEls.map((el: HTMLBodyElement) => {
+
+          const code = el.innerHTML;
+
+          (hiCash[code] !== undefined)
+            ? (() => {
+              el.innerHTML = hiCash[code];
+              console.log("cash used");
+            })()
+            : (() => {
+              hljs.initHighlighting.called = false;
+              hljs.initHighlighting(el);
+
+              hiCash[code] = el.innerHTML;
+              console.log("new");
+            })();
+
+        });
+
+
+        stemEls.map((el: HTMLBodyElement) => {
+
+          const stem = el.innerHTML;
+
+          (stemCash[stem] !== undefined)
+            ? (() => {
+              el.innerHTML = stemCash[stem];
+              console.log("stem cash used");
+            })()
+            : (() => {
+              stemCash[stem] = katex
+                .renderToString(stem, {
+                  throwOnError: false
+                });
+
+              el.innerHTML = stemCash[stem];
+
+              console.log("katex new");
+            })();
+
+        });
+
+
 
         scroll(data)(linesMappingTL);
 
