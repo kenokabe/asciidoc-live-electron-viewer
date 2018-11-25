@@ -12,40 +12,80 @@ const consoleTL = ((console) => T(
     return a;
   })
 ))(console);
-const log = (a: unknown) => (consoleTL[now] = a)
+const log = (a: unknown) =>
+  (consoleTL[now] = a);
 
-//const parser = new DOMParser();
+
+//load template elements
+
+const fs = require("fs");
+const parser = new DOMParser();
+
+const templateBodyHtmlTL =
+  T((self: timeline) =>
+    fs.readFile("./index.html", {
+      encoding: "utf-8"
+    },
+      (err: any, html: string) => {
+        //console.log(err);
+        // console.log(html);
+        const doc = parser
+          .parseFromString(html, "text/html");
+        const bodyHTML = doc.getElementsByTagName("body")[0].innerHTML;
+        self[now] = bodyHTML;
+
+      })
+  );
+
+//get target html
+const _htmlTargetEl = document.body.parentNode;
+const htmlTargetEl = (_htmlTargetEl == null)
+  ? {} as Element
+  : _htmlTargetEl;
+
+const emptyElement = (element: Element) =>
+  Array.prototype
+    .slice.call(element.childNodes)
+    .map((el: Element) =>
+      element.removeChild(el));
 
 const build = (html: string) =>
   (headElTL: timeline) => {
 
-    //preserver selves
-    const selfEl = document
-      .getElementsByTagName("script")[0];
-    const stemEl = document
-      .getElementsByTagName("link")[0];
+    emptyElement(htmlTargetEl as Element);
 
-    //get target html
-    const htmlTargetEl = document
-      .getElementsByTagName("html")[0];
+    (htmlTargetEl as Element)
+      .insertAdjacentHTML('beforeend', html);
 
-    //override html
-    htmlTargetEl.innerHTML = html;
-
-    //get head and body
-    const headTargetEl = document
-      .getElementsByTagName("head")[0];
-    const bodyTargetEl = document
-      .getElementsByTagName("body")[0];
-
-    headTargetEl
-      .insertAdjacentElement("beforeend", selfEl);
-    headTargetEl
-      .insertAdjacentElement("beforeend", stemEl);
-
-    bodyTargetEl
+    document.body
       .classList.add("target");
 
+    //mathjax-----
+    const stem = Array.prototype
+      .slice.call(document
+        .getElementsByTagName("script"))
+      .filter((el: Element) => {
+        const type = el.getAttribute("type");
+        return (type == null)
+          ? false
+          : (type.indexOf("mathjax") !== -1)
+      })
+      .length;
+
+    //remove all scripts
+    Array.prototype
+      .slice.call(document
+        .getElementsByTagName("script"))
+      .map((el: Element) => {
+        document.body.removeChild(el);
+      });
+
+    //add template
+    document.body
+      .insertAdjacentHTML("beforeend",
+        templateBodyHtmlTL[now] as string);
+
+    return stem;
 
   };
 

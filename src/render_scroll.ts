@@ -39,8 +39,6 @@ const scroll = (data: data) =>
     consoleTL[now] = data.dir_name.dir;
     consoleTL[now] = data.dir_name.name;
 
-    consoleTL[now] = data.line + 1;
-
     const line = ((line: number) =>
       (linesMappingTL[now] as number[])
         .reduce((acm: number, current: number) =>
@@ -53,15 +51,12 @@ const scroll = (data: data) =>
       ? "target"
       : "data-asciidocline" + line;
 
-    consoleTL[now] = className;
-
     const _targetElement = document
       .getElementsByClassName(className)[0];
     const targetElement = _targetElement == null
       ? <Element>{}
       : _targetElement;
 
-    consoleTL[now] = targetElement;
     //error??
     targetElement.scrollIntoView();
 
@@ -70,8 +65,6 @@ const scroll = (data: data) =>
     ((window.innerHeight + window.scrollY) >= document.body.offsetHeight)//touch the bottom
       ? undefined
       : sce.scrollTop = sce.scrollTop - offset;
-
-
   };
 
 export { scroll };

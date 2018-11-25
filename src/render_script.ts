@@ -15,7 +15,9 @@ const consoleTL = ((console) => T(
 const log = (a: unknown) => (consoleTL[now] = a);
 
 const hljs = require('highlight.js');
-const katex = require("katex");
+
+const katex = require('katex');
+
 interface hiCash {
   [index: string]: string;
 }
@@ -26,59 +28,113 @@ interface stemCash {
 }
 const stemCash = {} as stemCash;
 
-const script = () => {
+const script = (stem: number) => {
 
-  //script hack -----
-
-  const codeEls = Array.prototype
+  //highlightjs-----
+  (Array.prototype
     .slice.call(document
-      .getElementsByClassName("highlight"));
+      .getElementsByClassName("highlightjs")))
+    .map((el: HTMLBodyElement) => {
 
-  const stemEls = Array.prototype
-    .slice.call(document
-      .getElementsByClassName("stemblock"));
+      const code = el.innerText;
 
+      (hiCash[code] !== undefined)
+        ? (() => {
+          el.innerHTML = hiCash[code];
+          console.log("highlight cash used");
+        })()
+        : (() => {
+          hljs.initHighlighting.called = false;
+          hljs.initHighlighting(el);
 
-  codeEls.map((el: HTMLBodyElement) => {
-
-    const code = el.innerText;
-
-    (hiCash[code] !== undefined)
-      ? (() => {
-        el.innerHTML = hiCash[code];
-        console.log("cash used");
-      })()
-      : (() => {
-        hljs.initHighlighting.called = false;
-        hljs.initHighlighting(el);
-
-        hiCash[code] = el.innerHTML;
-        console.log("new");
-      })();
-
-  });
+          hiCash[code] = el.innerHTML;
+          console.log("new");
+        })();
+    });
 
 
-  stemEls.map((el: HTMLBodyElement) => {
+  console.log("mathjaxScript------");
+  console.log(stem);
 
-    const stem = el.innerText;
+  (stem === 0)
+    ? undefined
+    : (() => {
 
-    (stemCash[stem] !== undefined)
-      ? (() => {
-        el.innerHTML = stemCash[stem];
-        console.log("stem cash used");
-      })()
-      : (() => {
-        stemCash[stem] = katex.renderToString(stem, {
-          throwOnError: false
-        });
+      const _content = document
+        .getElementById("content");
 
-        el.innerHTML = stemCash[stem];
+      const content = (_content == null)
+        ? document.body
+        : _content;
 
-        console.log("katex new");
-      })();
 
-  });
+      //katex
+      const texToHtml = (tex: string) =>
+        (displayMode: boolean) =>
+          (stemCash[tex + "@" + displayMode] !== undefined)
+            ? (consoleTL[now] = "=================") &&
+            (consoleTL[now] = "stem cashed!") &&
+            stemCash[tex + "@" + displayMode]
+            : consoleTL[now] =
+            stemCash[tex + "@" + displayMode] =
+            katex
+              .renderToString(tex, {
+                displayMode: displayMode,
+                throwOnError: false
+              });
+
+      {
+        const _match =
+          content.innerHTML
+            .match(/\\\(.+?\\\)/g);
+
+        const match = (_match == null)
+          ? []
+          : _match;
+
+        const f = (html: string, texwrap: string) => {
+          const tex = texwrap
+            .split(String.raw`\(`)[1]
+            .split(String.raw`\)`)[0];
+          return html
+            .replace(texwrap, texToHtml(tex)(false));
+        };
+
+        content.innerHTML =
+          match
+            .reduce(f, content.innerHTML);
+      }
+
+      {
+        const _match =
+          content.innerHTML
+            .match(/\\\[.+?\\\]/g);
+
+        const match = (_match == null)
+          ? []
+          : _match;
+
+        console.log(match);
+
+        const f = (html: string, texwrap: string) => {
+          const tex = texwrap
+            .split(String.raw`\[`)[1]
+            .split(String.raw`\]`)[0];
+          return html
+            .replace(texwrap, texToHtml(tex)(true));
+        };
+
+        content.innerHTML =
+          match
+            .reduce(f, content.innerHTML);
+      }
+
+
+    })();
+
+
+
+
 };
 
 export { script };

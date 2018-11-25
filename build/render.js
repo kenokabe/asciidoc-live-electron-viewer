@@ -40,8 +40,8 @@ const render = (dataTL) => (baseOption) => (f) => {
         const html = asciidoctor
             .convert(data.text, option);
         const htmlFixed = fixLinks(data)(html);
-        build(htmlFixed)(headElTL);
-        script();
+        const stem = build(htmlFixed)(headElTL);
+        script(stem);
         scroll(data)(linesMappingTL);
         f(); //render done!
         return true;

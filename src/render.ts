@@ -74,9 +74,9 @@ const render = (dataTL: timeline) =>
 
         const htmlFixed = fixLinks(data)(html);
 
-        build(htmlFixed)(headElTL);
+        const stem = build(htmlFixed)(headElTL);
 
-        script();
+        script(stem);
 
         scroll(data)(linesMappingTL);
 

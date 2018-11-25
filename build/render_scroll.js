@@ -12,7 +12,6 @@ const scroll = (data) => (linesMappingTL) => {
     //target scroll---------
     consoleTL[now] = data.dir_name.dir;
     consoleTL[now] = data.dir_name.name;
-    consoleTL[now] = data.line + 1;
     const line = ((line) => linesMappingTL[now]
         .reduce((acm, current) => (line >= current)
         ? current
@@ -20,13 +19,11 @@ const scroll = (data) => (linesMappingTL) => {
     const className = (data.line < 10)
         ? "target"
         : "data-asciidocline" + line;
-    consoleTL[now] = className;
     const _targetElement = document
         .getElementsByClassName(className)[0];
     const targetElement = _targetElement == null
         ? {}
         : _targetElement;
-    consoleTL[now] = targetElement;
     //error??
     targetElement.scrollIntoView();
     const offset = 150;
