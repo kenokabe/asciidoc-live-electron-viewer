@@ -1,4 +1,4 @@
-import { T, now } from "./modules/timeline-monad";
+import { T } from "./modules/timeline-monad";
 
 const consoleTL = ((console) => T(
   (self: timeline) => self.sync((a: unknown) => {
@@ -6,11 +6,11 @@ const consoleTL = ((console) => T(
     return a;
   })
 ))(console);
-const log = (a: unknown) => (consoleTL[now] = a)
+const log = (a: unknown) => (consoleTL.now = a)
 
 interface timeline {
   type: string;
-  [now: string]: any;
+  now: any;
   sync: Function;
 }
 
@@ -32,7 +32,7 @@ const save = (dataTL: timeline) =>
   (baseOption: object) =>
     (f: Function) => {
 
-      const data = dataTL[now];
+      const data = dataTL.now;
       const name = data
         .dir_name
         .name.split(".")[0];

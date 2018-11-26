@@ -1,10 +1,10 @@
 interface timeline {
   type: string;
-  [now: string]: any;
+  now: any;
   sync: Function;
 }
 
-import { T, now } from "./modules/timeline-monad";
+import { T } from "./modules/timeline-monad";
 
 const consoleTL = ((console) => T(
   (self: timeline) => self.sync((a: unknown) => {
@@ -12,7 +12,7 @@ const consoleTL = ((console) => T(
     return a;
   })
 ))(console);
-const log = (a: unknown) => (consoleTL[now] = a);
+const log = (a: unknown) => (consoleTL.now = a);
 
 const hljs = require('highlight.js');
 
@@ -72,10 +72,10 @@ const script = (stem: number) => {
       const texToHtml = (tex: string) =>
         (displayMode: boolean) =>
           (stemCash[tex + "@" + displayMode] !== undefined)
-            ? (consoleTL[now] = "=================") &&
-            (consoleTL[now] = "stem cashed!") &&
+            ? (consoleTL.now = "=================") &&
+            (consoleTL.now = "stem cashed!") &&
             stemCash[tex + "@" + displayMode]
-            : consoleTL[now] =
+            : consoleTL.now =
             stemCash[tex + "@" + displayMode] =
             katex
               .renderToString(tex, {

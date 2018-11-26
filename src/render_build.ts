@@ -1,10 +1,10 @@
 interface timeline {
   type: string;
-  [now: string]: any;
+  now: any;
   sync: Function;
 }
 
-import { T, now } from "./modules/timeline-monad";
+import { T } from "./modules/timeline-monad";
 
 const consoleTL = ((console) => T(
   (self: timeline) => self.sync((a: unknown) => {
@@ -13,7 +13,7 @@ const consoleTL = ((console) => T(
   })
 ))(console);
 const log = (a: unknown) =>
-  (consoleTL[now] = a);
+  (consoleTL.now = a);
 
 
 //load template elements
@@ -32,7 +32,7 @@ const templateBodyHtmlTL =
         const doc = parser
           .parseFromString(html, "text/html");
         const bodyHTML = doc.getElementsByTagName("body")[0].innerHTML;
-        self[now] = bodyHTML;
+        self.now = bodyHTML;
 
       })
   );
@@ -83,7 +83,7 @@ const build = (html: string) =>
     //add template
     document.body
       .insertAdjacentHTML("beforeend",
-        templateBodyHtmlTL[now] as string);
+        templateBodyHtmlTL.now as string);
 
     return stem;
 

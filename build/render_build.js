@@ -1,9 +1,9 @@
-import { T, now } from "./modules/timeline-monad";
+import { T } from "./modules/timeline-monad";
 const consoleTL = ((console) => T((self) => self.sync((a) => {
     console.log(a);
     return a;
 })))(console);
-const log = (a) => (consoleTL[now] = a);
+const log = (a) => (consoleTL.now = a);
 //load template elements
 const fs = require("fs");
 const parser = new DOMParser();
@@ -15,7 +15,7 @@ const templateBodyHtmlTL = T((self) => fs.readFile("./index.html", {
     const doc = parser
         .parseFromString(html, "text/html");
     const bodyHTML = doc.getElementsByTagName("body")[0].innerHTML;
-    self[now] = bodyHTML;
+    self.now = bodyHTML;
 }));
 //get target html
 const _htmlTargetEl = document.body.parentNode;
@@ -51,7 +51,7 @@ const build = (html) => (headElTL) => {
     });
     //add template
     document.body
-        .insertAdjacentHTML("beforeend", templateBodyHtmlTL[now]);
+        .insertAdjacentHTML("beforeend", templateBodyHtmlTL.now);
     return stem;
 };
 export { build };

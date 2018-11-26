@@ -1,13 +1,13 @@
-import { T, now } from "./modules/timeline-monad";
+import { T } from "./modules/timeline-monad";
 const consoleTL = ((console) => T((self) => self.sync((a) => {
     console.log(a);
     return a;
 })))(console);
-const log = (a) => (consoleTL[now] = a);
+const log = (a) => (consoleTL.now = a);
 const asciidoctor = require('asciidoctor.js')();
 const path = require('path');
 const save = (dataTL) => (baseOption) => (f) => {
-    const data = dataTL[now];
+    const data = dataTL.now;
     const name = data
         .dir_name
         .name.split(".")[0];

@@ -1,4 +1,4 @@
-import { T, now } from "./modules/timeline-monad";
+import { T } from "./modules/timeline-monad";
 import { fixLinks } from "./render_fixlinks";
 import { build } from "./render_build";
 import { script } from "./render_script";
@@ -7,7 +7,7 @@ const consoleTL = ((console) => T((self) => self.sync((a) => {
     console.log(a);
     return a;
 })))(console);
-const log = (a) => (consoleTL[now] = a);
+const log = (a) => (consoleTL.now = a);
 const linesMappingTL = T();
 const asciidoctor = require('asciidoctor.js')();
 const registry = asciidoctor.Extensions.create();
@@ -22,14 +22,14 @@ import('../extensions/highlight.js/index.js')
   });
 */
 const headElTL = T();
-headElTL[now] =
+headElTL.now =
     document
         .getElementsByTagName("head")[0];
 let count = 0;
 const render = (dataTL) => (baseOption) => (f) => {
     try {
         console.log(count++);
-        const data = dataTL[now];
+        const data = dataTL.now;
         const addOption = {
             base_dir: data.dir_name.dir,
             extension_registry: registry,

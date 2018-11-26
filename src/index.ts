@@ -1,5 +1,5 @@
 
-import { T, now } from "./modules/timeline-monad";
+import { T } from "./modules/timeline-monad";
 
 import { render } from "./render";
 import { save } from "./save";
@@ -8,7 +8,7 @@ import { Socket } from "net";
 
 interface timeline {
   type: string;
-  [now: string]: any;
+  now: any;
   sync: Function;
 }
 interface dir_name {
@@ -28,7 +28,7 @@ const consoleTL = ((console) => T(
     return a;
   })
 ))(console);
-const log = (a: undefined) => (consoleTL[now] = a);
+const log = (a: undefined) => (consoleTL.now = a);
 
 const dataTL = T();
 
@@ -42,7 +42,7 @@ const baseOption = {
 };
 
 const socketManager = () => {
-  consoleTL[now] = ("index.ts!!!!!!");
+  consoleTL.now = ("index.ts!!!!!!");
 
   const net = require('net');
   const JsonSocket = require("json-socket-international");
@@ -60,7 +60,7 @@ const socketManager = () => {
     .on('connection',
       (socketTCP: Socket) => {
         const socket = new JsonSocket(socketTCP);
-        consoleTL[now] = "VSCode client connected!";
+        consoleTL.now = "VSCode client connected!";
 
         const ping = () => {
           socket.sendMessage({
@@ -87,7 +87,7 @@ const socketManager = () => {
               (msg.cmd === "ping")
                 ? ping()
                 : (msg.cmd === "render")
-                  ? (dataTL[now] = msg.data) &&
+                  ? (dataTL.now = msg.data) &&
                   render(dataTL)(baseOption)(renderDoneF)
                   : (msg.cmd === "save")
                     ? save(dataTL)(baseOption)(savedF)
@@ -97,7 +97,7 @@ const socketManager = () => {
         socket
           .on('close',
             () => {
-              consoleTL[now] = "VSCode client disconnected...";
+              consoleTL.now = "VSCode client disconnected...";
             });
       });
 

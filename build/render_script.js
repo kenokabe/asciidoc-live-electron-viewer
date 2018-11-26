@@ -1,9 +1,9 @@
-import { T, now } from "./modules/timeline-monad";
+import { T } from "./modules/timeline-monad";
 const consoleTL = ((console) => T((self) => self.sync((a) => {
     console.log(a);
     return a;
 })))(console);
-const log = (a) => (consoleTL[now] = a);
+const log = (a) => (consoleTL.now = a);
 const hljs = require('highlight.js');
 const katex = require('katex');
 const hiCash = {};
@@ -39,15 +39,16 @@ const script = (stem) => {
                 : _content;
             //katex
             const texToHtml = (tex) => (displayMode) => (stemCash[tex + "@" + displayMode] !== undefined)
-                ? (consoleTL[now] = "=================") &&
-                    (consoleTL[now] = "stem cashed!") &&
+                ? (consoleTL.now = "=================") &&
+                    (consoleTL.now = "stem cashed!") &&
                     stemCash[tex + "@" + displayMode]
-                : consoleTL[now] =
-                    stemCash[tex + "@" + displayMode] = katex
-                        .renderToString(tex, {
-                        displayMode: displayMode,
-                        throwOnError: false
-                    });
+                : consoleTL.now =
+                    stemCash[tex + "@" + displayMode] =
+                        katex
+                            .renderToString(tex, {
+                            displayMode: displayMode,
+                            throwOnError: false
+                        });
             {
                 const _match = content.innerHTML
                     .match(/\\\(.+?\\\)/g);

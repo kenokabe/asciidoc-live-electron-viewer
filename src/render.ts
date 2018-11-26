@@ -1,5 +1,5 @@
 
-import { T, now } from "./modules/timeline-monad";
+import { T } from "./modules/timeline-monad";
 import { fixLinks } from "./render_fixlinks";
 import { build } from "./render_build";
 import { script } from "./render_script";
@@ -11,11 +11,11 @@ const consoleTL = ((console) => T(
     return a;
   })
 ))(console);
-const log = (a: unknown) => (consoleTL[now] = a)
+const log = (a: unknown) => (consoleTL.now = a)
 
 interface timeline {
   type: string;
-  [now: string]: any;
+  now: any;
   sync: Function;
 }
 
@@ -45,7 +45,7 @@ import('../extensions/highlight.js/index.js')
   });
 */
 const headElTL = T();
-headElTL[now] =
+headElTL.now =
   document
     .getElementsByTagName("head")[0];
 
@@ -58,7 +58,7 @@ const render = (dataTL: timeline) =>
       try {
         console.log(count++);
 
-        const data = dataTL[now];
+        const data = dataTL.now;
         const addOption =
         {
           base_dir: data.dir_name.dir,

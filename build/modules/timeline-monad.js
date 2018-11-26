@@ -1,4 +1,5 @@
-const now = "now"; //time-index of the current time
+//the timeline property `now` means
+//time-index of the current time
 // on the timeline from now until the future / next - now
 const T = (timeFunction = () => { }) => ((observers) => {
     const timeline = ((observers) => {
@@ -11,7 +12,9 @@ const T = (timeFunction = () => { }) => ((observers) => {
             },
             set now(val) {
                 currentVal = val; //set the val
-                const nouse = observers.map((f) => f(val)); //sync(f)
+                const nouse = (val === undefined)
+                    ? undefined //undefined never triggers
+                    : observers.map((f) => f(val)); //sync(f)
             },
             sync: ((observers) => (f) => {
                 const timeline = self;
@@ -24,14 +27,15 @@ const T = (timeFunction = () => { }) => ((observers) => {
                     // RightIdentity: join = TTX => TX  
                     const nouse = (newVal !== undefined) &&
                         (newVal.type === timeline.type)
-                        ? newVal.sync((a) => syncTL[now] = a)
-                        : syncTL[now] = newVal;
+                        ? newVal.sync((a) => syncTL.now = a)
+                        : syncTL.now = newVal;
                     return true;
                 });
-                // trigger if the timeline[now] is already filled 
-                const nouse1 = (timeline[now] === undefined)
+                // trigger if the timeline.now
+                // is already filled 
+                const nouse1 = (timeline.now === undefined)
                     ? undefined //if undefined, do nothing
-                    : timeline[now] = timeline[now];
+                    : timeline.now = timeline.now;
                 return syncTL;
             })(observers),
         };
@@ -46,4 +50,4 @@ const T = (timeFunction = () => { }) => ((observers) => {
     }))(timeline);
 })([]) //observers = []
     .init(timeFunction); //initiate & return the timeline
-export { T, now };
+export { T };

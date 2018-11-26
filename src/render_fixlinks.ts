@@ -1,5 +1,3 @@
-
-
 const path = require("path");
 
 const fileUrl = (str: string) => {
