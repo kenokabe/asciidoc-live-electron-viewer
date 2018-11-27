@@ -19,11 +19,9 @@
     "asciidoctor.js": "^1.5.7",
     "electron": "^3.0.3",
     "esm": "*",
+    "highlight.js": "^9.13.1",
     "json-socket-international": "^0.4.0",
-    "katex": "^0.10.0",
-    "mathjax-node": "^2.1.1",
-    "prismjs": "^1.15.0",
-    "highlight.js": "^9.13.1"
+    "katex": "^0.10.0"
   },
   "devDependencies": {
     "typescript": "*",
