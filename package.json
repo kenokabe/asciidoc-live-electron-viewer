@@ -19,7 +19,7 @@
     "asciidoctor.js": "^1.5.7",
     "electron": "^3.0.3",
     "esm": "*",
-    "highlight.js": "^9.13.1",
+    "highlight.js": "^10.4.1",
     "json-socket-international": "^0.4.0",
     "katex": "^0.10.0"
   },
